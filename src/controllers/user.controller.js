@@ -49,6 +49,16 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     username: username.toLowerCase(),
   });
+
+  // check if user is created successfully
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  )
+
+  if (!createdUser) {
+    throw new ApiError(500, "something went wrong while registering the user")
+  }
+
 });
 
 export { registerUser };
