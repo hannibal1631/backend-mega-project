@@ -89,7 +89,17 @@ const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   });
 
+  if (!user) {
+    throw new ApiError(404, "user does not exist")
+  }
+
   // check password
+  const isPasswordValid = await user.isPasswordCorrect(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "incorrect password");
+  }
+
   // access and refresh token
   // send cookie
 });
